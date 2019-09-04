@@ -5,6 +5,13 @@ killbill-client-php
 
 PHP client library for [Killbill](http://killbill.io)
 
+Kill Bill compatibility
+-----------------------
+
+| Plugin branch/version   | Kill Bill version  |
+| ----------------------: | -----------------: |
+| backport-0.18.x / 0.2.x | 0.18.z             |
+| master / 0.3.x          | 0.20.z             |
 
 ## Requirements
 
@@ -23,7 +30,7 @@ composer require killbill\killbill-client
 Download the files and include `autoload.php`:
 
 ```php
-    require_once('/path/to/./vendor/autoload.php');
+require_once('/path/to/./vendor/autoload.php');
 ```
 
 ## Tests
@@ -43,10 +50,11 @@ Please follow the [installation procedure](#installation--usage) and then run th
 <?php
 require_once(__DIR__ . '/vendor/autoload.php');
 
-use Killbill\Client\Api\AccountApi;
-use Killbill\Client\Api\TenantApi;
-use Killbill\Client\Model\Account;
-use Killbill\Client\Model\Tenant;
+use Killbill\Client\Swagger\Configuration;
+use Killbill\Client\Swagger\Api\AccountApi;
+use Killbill\Client\Swagger\Api\TenantApi;
+use Killbill\Client\Swagger\Model\Account;
+use Killbill\Client\Swagger\Model\Tenant;
 
 // Killbill configuration
 $config = Configuration::getDefaultConfiguration();
