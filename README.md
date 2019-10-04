@@ -1,17 +1,14 @@
 killbill-client-php
 ===================
 
-[![build status](https://secure.travis-ci.org/killbill/killbill-client-php.png)](https://travis-ci.org/killbill/killbill-client-php)
+PHP client library for [Kill Bill](http://killbill.io).
 
-PHP client library for [Killbill](http://killbill.io)
+## Kill Bill compatibility
 
-Kill Bill compatibility
------------------------
-
-| Plugin branch/version   | Kill Bill version  |
-| ----------------------: | -----------------: |
-| backport-0.18.x / 0.2.x | 0.18.z             |
-| master / 0.3.x          | 0.20.z             |
+| Client version | Kill Bill version |
+| -------------: | ----------------: |
+| 0.2.x          | 0.18.z            |
+| 0.3.x          | 0.20.z            |
 
 ## Requirements
 
