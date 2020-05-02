@@ -478,7 +478,8 @@ self::ITEM_TYPE_ITEM_ADJ,
 self::ITEM_TYPE_USAGE,
 self::ITEM_TYPE_TAX,
 self::ITEM_TYPE_PARENT_SUMMARY,
-self::ITEM_TYPE_DISCOUNT,        ];
+self::ITEM_TYPE_DISCOUNT,
+self::ITEM_TYPE_CREDIT,        ];
     }
     /**
      * Gets allowable values of the enum
