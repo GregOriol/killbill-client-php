@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "description": "Kill Bill is an open-source billing and payments platform",
-    "version": "0.22.8",
+    "version": "0.22.11",
     "title": "Kill Bill",
     "contact": {
       "name": "killbilling-users@googlegroups.com"
@@ -84,6 +84,1410 @@
     }
   ],
   "paths": {
+    "/1.0/kb/accounts/pagination": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "List accounts",
+        "description": "",
+        "operationId": "getAccounts",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int64"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 100,
+            "format": "int64"
+          },
+          {
+            "name": "accountWithBalance",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "accountWithBalanceAndCBA",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "audit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "NONE",
+            "enum": [
+              "FULL",
+              "MINIMAL",
+              "NONE"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Account"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      }
+    },
+    "/1.0/kb/accounts/{accountId}/bundles": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Retrieve bundles for account",
+        "description": "",
+        "operationId": "getAccountBundles",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
+            "format": "uuid"
+          },
+          {
+            "name": "externalKey",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "bundlesFilter",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "audit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "NONE",
+            "enum": [
+              "FULL",
+              "MINIMAL",
+              "NONE"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Bundle"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid account id supplied"
+          },
+          "404": {
+            "description": "Account not found"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      }
+    },
+    "/1.0/kb/accounts/{accountId}": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Retrieve an account by id",
+        "description": "",
+        "operationId": "getAccount",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
+            "format": "uuid"
+          },
+          {
+            "name": "accountWithBalance",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "accountWithBalanceAndCBA",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "audit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "NONE",
+            "enum": [
+              "FULL",
+              "MINIMAL",
+              "NONE"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Account"
+            }
+          },
+          "400": {
+            "description": "Invalid account id supplied"
+          },
+          "404": {
+            "description": "Account not found"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Update account",
+        "description": "",
+        "operationId": "updateAccount",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
+            "format": "uuid"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Account"
+            }
+          },
+          {
+            "name": "treatNullAsReset",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "X-Killbill-CreatedBy",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Reason",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Comment",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful operation"
+          },
+          "400": {
+            "description": "Invalid account data supplied"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Close account",
+        "description": "",
+        "operationId": "closeAccount",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
+            "format": "uuid"
+          },
+          {
+            "name": "cancelAllSubscriptions",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "writeOffUnpaidInvoices",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "itemAdjustUnpaidInvoices",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "removeFutureNotifications",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "X-Killbill-CreatedBy",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Reason",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Comment",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful operation"
+          },
+          "400": {
+            "description": "Invalid account id supplied"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      }
+    },
+    "/1.0/kb/accounts/search/{searchKey}": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Search accounts",
+        "description": "",
+        "operationId": "searchAccounts",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "searchKey",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": ".*"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int64"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 100,
+            "format": "int64"
+          },
+          {
+            "name": "accountWithBalance",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "accountWithBalanceAndCBA",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "audit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "NONE",
+            "enum": [
+              "FULL",
+              "MINIMAL",
+              "NONE"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Account"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      }
+    },
+    "/1.0/kb/accounts": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Retrieve an account by external key",
+        "description": "",
+        "operationId": "getAccountByKey",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "externalKey",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "accountWithBalance",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "accountWithBalanceAndCBA",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "audit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "NONE",
+            "enum": [
+              "FULL",
+              "MINIMAL",
+              "NONE"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Account"
+            }
+          },
+          "404": {
+            "description": "Account not found"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Create account",
+        "description": "",
+        "operationId": "createAccount",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Account"
+            }
+          },
+          {
+            "name": "X-Killbill-CreatedBy",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Reason",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Comment",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Account created successfully",
+            "schema": {
+              "$ref": "#/definitions/Account"
+            }
+          },
+          "400": {
+            "description": "Invalid account data supplied"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      }
+    },
+    "/1.0/kb/accounts/{accountId}/timeline": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Retrieve account timeline",
+        "description": "",
+        "operationId": "getAccountTimeline",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
+            "format": "uuid"
+          },
+          {
+            "name": "parallel",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "audit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "NONE",
+            "enum": [
+              "FULL",
+              "MINIMAL",
+              "NONE"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/AccountTimeline"
+            }
+          },
+          "400": {
+            "description": "Invalid account id supplied"
+          },
+          "404": {
+            "description": "Account not found"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      }
+    },
+    "/1.0/kb/accounts/{accountId}/tags": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Retrieve account tags",
+        "description": "",
+        "operationId": "getAccountTags",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
+            "format": "uuid"
+          },
+          {
+            "name": "includedDeleted",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "audit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "NONE",
+            "enum": [
+              "FULL",
+              "MINIMAL",
+              "NONE"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Tag"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid account id supplied"
+          },
+          "404": {
+            "description": "Account not found"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Add tags to account",
+        "description": "",
+        "operationId": "createAccountTags",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
+            "format": "uuid"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          },
+          {
+            "name": "X-Killbill-CreatedBy",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Reason",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Comment",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Tag created successfully",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Tag"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid account id supplied"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Remove tags from account",
+        "description": "",
+        "operationId": "deleteAccountTags",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
+            "format": "uuid"
+          },
+          {
+            "name": "tagDef",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "X-Killbill-CreatedBy",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Reason",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Comment",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful operation"
+          },
+          "400": {
+            "description": "Invalid account id supplied or account does not have a default payment method (AUTO_PAY_OFF tag only)"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      }
+    },
+    "/1.0/kb/accounts/{accountId}/customFields": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Retrieve account custom fields",
+        "description": "",
+        "operationId": "getAccountCustomFields",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
+            "format": "uuid"
+          },
+          {
+            "name": "audit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "NONE",
+            "enum": [
+              "FULL",
+              "MINIMAL",
+              "NONE"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CustomField"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid account id supplied"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Add custom fields to account",
+        "description": "",
+        "operationId": "createAccountCustomFields",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
+            "format": "uuid"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CustomField"
+              }
+            }
+          },
+          {
+            "name": "X-Killbill-CreatedBy",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Reason",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Comment",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Custom field created successfully",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CustomField"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid account id supplied"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Modify custom fields to account",
+        "description": "",
+        "operationId": "modifyAccountCustomFields",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
+            "format": "uuid"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CustomField"
+              }
+            }
+          },
+          {
+            "name": "X-Killbill-CreatedBy",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Reason",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Comment",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful operation"
+          },
+          "400": {
+            "description": "Invalid account id supplied"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Remove custom fields from account",
+        "description": "",
+        "operationId": "deleteAccountCustomFields",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
+            "format": "uuid"
+          },
+          {
+            "name": "customField",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "X-Killbill-CreatedBy",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Reason",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Comment",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful operation"
+          },
+          "400": {
+            "description": "Invalid account id supplied"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      }
+    },
+    "/1.0/kb/accounts/{accountId}/block": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Retrieve blocking states for account",
+        "description": "",
+        "operationId": "getBlockingStates",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
+            "format": "uuid"
+          },
+          {
+            "name": "blockingStateTypes",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "SUBSCRIPTION",
+                "SUBSCRIPTION_BUNDLE",
+                "ACCOUNT"
+              ]
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "blockingStateSvcs",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "audit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "NONE",
+            "enum": [
+              "FULL",
+              "MINIMAL",
+              "NONE"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/BlockingState"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid account id supplied"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Block an account",
+        "description": "",
+        "operationId": "addAccountBlockingState",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
+            "format": "uuid"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BlockingState"
+            }
+          },
+          {
+            "name": "requestedDate",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "pluginProperty",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "X-Killbill-CreatedBy",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Reason",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Comment",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Blocking state created successfully",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/BlockingState"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid account id supplied"
+          },
+          "404": {
+            "description": "Account not found"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      }
+    },
+    "/1.0/kb/accounts/{accountId}/auditLogs": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Retrieve audit logs by account id",
+        "description": "",
+        "operationId": "getAccountAuditLogs",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AuditLog"
+              }
+            }
+          },
+          "404": {
+            "description": "Account not found"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      }
+    },
     "/1.0/kb/accounts/{accountId}/cbaRebalancing": {
       "put": {
         "tags": [
@@ -1210,183 +2614,6 @@
         ]
       }
     },
-    "/1.0/kb/accounts/{accountId}/block": {
-      "get": {
-        "tags": [
-          "Account"
-        ],
-        "summary": "Retrieve blocking states for account",
-        "description": "",
-        "operationId": "getBlockingStates",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
-            "format": "uuid"
-          },
-          {
-            "name": "blockingStateTypes",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": [
-                "SUBSCRIPTION",
-                "SUBSCRIPTION_BUNDLE",
-                "ACCOUNT"
-              ]
-            },
-            "collectionFormat": "multi"
-          },
-          {
-            "name": "blockingStateSvcs",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
-          },
-          {
-            "name": "audit",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "default": "NONE",
-            "enum": [
-              "FULL",
-              "MINIMAL",
-              "NONE"
-            ]
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/BlockingState"
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid account id supplied"
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      },
-      "post": {
-        "tags": [
-          "Account"
-        ],
-        "summary": "Block an account",
-        "description": "",
-        "operationId": "addAccountBlockingState",
-        "consumes": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
-            "format": "uuid"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/BlockingState"
-            }
-          },
-          {
-            "name": "requestedDate",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "date"
-          },
-          {
-            "name": "pluginProperty",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
-          },
-          {
-            "name": "X-Killbill-CreatedBy",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Reason",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Comment",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Blocking state created successfully",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/BlockingState"
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid account id supplied"
-          },
-          "404": {
-            "description": "Account not found"
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      }
-    },
     "/1.0/kb/accounts/{accountId}/allCustomFields": {
       "get": {
         "tags": [
@@ -1462,288 +2689,6 @@
           },
           "404": {
             "description": "Account not found"
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      }
-    },
-    "/1.0/kb/accounts/{accountId}/customFields": {
-      "get": {
-        "tags": [
-          "Account"
-        ],
-        "summary": "Retrieve account custom fields",
-        "description": "",
-        "operationId": "getAccountCustomFields",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
-            "format": "uuid"
-          },
-          {
-            "name": "audit",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "default": "NONE",
-            "enum": [
-              "FULL",
-              "MINIMAL",
-              "NONE"
-            ]
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/CustomField"
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid account id supplied"
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      },
-      "post": {
-        "tags": [
-          "Account"
-        ],
-        "summary": "Add custom fields to account",
-        "description": "",
-        "operationId": "createAccountCustomFields",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
-            "format": "uuid"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/CustomField"
-              }
-            }
-          },
-          {
-            "name": "X-Killbill-CreatedBy",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Reason",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Comment",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Custom field created successfully",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/CustomField"
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid account id supplied"
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      },
-      "put": {
-        "tags": [
-          "Account"
-        ],
-        "summary": "Modify custom fields to account",
-        "description": "",
-        "operationId": "modifyAccountCustomFields",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
-            "format": "uuid"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/CustomField"
-              }
-            }
-          },
-          {
-            "name": "X-Killbill-CreatedBy",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Reason",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Comment",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successful operation"
-          },
-          "400": {
-            "description": "Invalid account id supplied"
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      },
-      "delete": {
-        "tags": [
-          "Account"
-        ],
-        "summary": "Remove custom fields from account",
-        "description": "",
-        "operationId": "deleteAccountCustomFields",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
-            "format": "uuid"
-          },
-          {
-            "name": "customField",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "collectionFormat": "multi"
-          },
-          {
-            "name": "X-Killbill-CreatedBy",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Reason",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Comment",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successful operation"
-          },
-          "400": {
-            "description": "Invalid account id supplied"
           }
         },
         "security": [
@@ -1841,227 +2786,6 @@
           },
           "404": {
             "description": "Account not found"
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      }
-    },
-    "/1.0/kb/accounts/{accountId}/tags": {
-      "get": {
-        "tags": [
-          "Account"
-        ],
-        "summary": "Retrieve account tags",
-        "description": "",
-        "operationId": "getAccountTags",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
-            "format": "uuid"
-          },
-          {
-            "name": "includedDeleted",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "default": false
-          },
-          {
-            "name": "audit",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "default": "NONE",
-            "enum": [
-              "FULL",
-              "MINIMAL",
-              "NONE"
-            ]
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Tag"
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid account id supplied"
-          },
-          "404": {
-            "description": "Account not found"
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      },
-      "post": {
-        "tags": [
-          "Account"
-        ],
-        "summary": "Add tags to account",
-        "description": "",
-        "operationId": "createAccountTags",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
-            "format": "uuid"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uuid"
-              }
-            }
-          },
-          {
-            "name": "X-Killbill-CreatedBy",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Reason",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Comment",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Tag created successfully",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Tag"
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid account id supplied"
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      },
-      "delete": {
-        "tags": [
-          "Account"
-        ],
-        "summary": "Remove tags from account",
-        "description": "",
-        "operationId": "deleteAccountTags",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
-            "format": "uuid"
-          },
-          {
-            "name": "tagDef",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "collectionFormat": "multi"
-          },
-          {
-            "name": "X-Killbill-CreatedBy",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Reason",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Comment",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successful operation"
-          },
-          "400": {
-            "description": "Invalid account id supplied or account does not have a default payment method (AUTO_PAY_OFF tag only)"
           }
         },
         "security": [
@@ -2516,730 +3240,6 @@
         ]
       }
     },
-    "/1.0/kb/accounts/{accountId}": {
-      "get": {
-        "tags": [
-          "Account"
-        ],
-        "summary": "Retrieve an account by id",
-        "description": "",
-        "operationId": "getAccount",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
-            "format": "uuid"
-          },
-          {
-            "name": "accountWithBalance",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "default": false
-          },
-          {
-            "name": "accountWithBalanceAndCBA",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "default": false
-          },
-          {
-            "name": "audit",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "default": "NONE",
-            "enum": [
-              "FULL",
-              "MINIMAL",
-              "NONE"
-            ]
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/Account"
-            }
-          },
-          "400": {
-            "description": "Invalid account id supplied"
-          },
-          "404": {
-            "description": "Account not found"
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      },
-      "put": {
-        "tags": [
-          "Account"
-        ],
-        "summary": "Update account",
-        "description": "",
-        "operationId": "updateAccount",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
-            "format": "uuid"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Account"
-            }
-          },
-          {
-            "name": "treatNullAsReset",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "default": false
-          },
-          {
-            "name": "X-Killbill-CreatedBy",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Reason",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Comment",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successful operation"
-          },
-          "400": {
-            "description": "Invalid account data supplied"
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      },
-      "delete": {
-        "tags": [
-          "Account"
-        ],
-        "summary": "Close account",
-        "description": "",
-        "operationId": "closeAccount",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
-            "format": "uuid"
-          },
-          {
-            "name": "cancelAllSubscriptions",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "default": false
-          },
-          {
-            "name": "writeOffUnpaidInvoices",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "default": false
-          },
-          {
-            "name": "itemAdjustUnpaidInvoices",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "default": false
-          },
-          {
-            "name": "removeFutureNotifications",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "default": true
-          },
-          {
-            "name": "X-Killbill-CreatedBy",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Reason",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Comment",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successful operation"
-          },
-          "400": {
-            "description": "Invalid account id supplied"
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      }
-    },
-    "/1.0/kb/accounts/pagination": {
-      "get": {
-        "tags": [
-          "Account"
-        ],
-        "summary": "List accounts",
-        "description": "",
-        "operationId": "getAccounts",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "offset",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "default": 0,
-            "format": "int64"
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "default": 100,
-            "format": "int64"
-          },
-          {
-            "name": "accountWithBalance",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "default": false
-          },
-          {
-            "name": "accountWithBalanceAndCBA",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "default": false
-          },
-          {
-            "name": "audit",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "default": "NONE",
-            "enum": [
-              "FULL",
-              "MINIMAL",
-              "NONE"
-            ]
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Account"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      }
-    },
-    "/1.0/kb/accounts/search/{searchKey}": {
-      "get": {
-        "tags": [
-          "Account"
-        ],
-        "summary": "Search accounts",
-        "description": "",
-        "operationId": "searchAccounts",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "searchKey",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": ".*"
-          },
-          {
-            "name": "offset",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "default": 0,
-            "format": "int64"
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "default": 100,
-            "format": "int64"
-          },
-          {
-            "name": "accountWithBalance",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "default": false
-          },
-          {
-            "name": "accountWithBalanceAndCBA",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "default": false
-          },
-          {
-            "name": "audit",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "default": "NONE",
-            "enum": [
-              "FULL",
-              "MINIMAL",
-              "NONE"
-            ]
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Account"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      }
-    },
-    "/1.0/kb/accounts/{accountId}/bundles": {
-      "get": {
-        "tags": [
-          "Account"
-        ],
-        "summary": "Retrieve bundles for account",
-        "description": "",
-        "operationId": "getAccountBundles",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
-            "format": "uuid"
-          },
-          {
-            "name": "externalKey",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "bundlesFilter",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "audit",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "default": "NONE",
-            "enum": [
-              "FULL",
-              "MINIMAL",
-              "NONE"
-            ]
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Bundle"
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid account id supplied"
-          },
-          "404": {
-            "description": "Account not found"
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      }
-    },
-    "/1.0/kb/accounts": {
-      "get": {
-        "tags": [
-          "Account"
-        ],
-        "summary": "Retrieve an account by external key",
-        "description": "",
-        "operationId": "getAccountByKey",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "externalKey",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "accountWithBalance",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "default": false
-          },
-          {
-            "name": "accountWithBalanceAndCBA",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "default": false
-          },
-          {
-            "name": "audit",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "default": "NONE",
-            "enum": [
-              "FULL",
-              "MINIMAL",
-              "NONE"
-            ]
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/Account"
-            }
-          },
-          "404": {
-            "description": "Account not found"
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      },
-      "post": {
-        "tags": [
-          "Account"
-        ],
-        "summary": "Create account",
-        "description": "",
-        "operationId": "createAccount",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Account"
-            }
-          },
-          {
-            "name": "X-Killbill-CreatedBy",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Reason",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Comment",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Account created successfully",
-            "schema": {
-              "$ref": "#/definitions/Account"
-            }
-          },
-          "400": {
-            "description": "Invalid account data supplied"
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      }
-    },
-    "/1.0/kb/accounts/{accountId}/timeline": {
-      "get": {
-        "tags": [
-          "Account"
-        ],
-        "summary": "Retrieve account timeline",
-        "description": "",
-        "operationId": "getAccountTimeline",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
-            "format": "uuid"
-          },
-          {
-            "name": "parallel",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "default": false
-          },
-          {
-            "name": "audit",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "default": "NONE",
-            "enum": [
-              "FULL",
-              "MINIMAL",
-              "NONE"
-            ]
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/AccountTimeline"
-            }
-          },
-          "400": {
-            "description": "Invalid account id supplied"
-          },
-          "404": {
-            "description": "Account not found"
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      }
-    },
-    "/1.0/kb/accounts/{accountId}/auditLogs": {
-      "get": {
-        "tags": [
-          "Account"
-        ],
-        "summary": "Retrieve audit logs by account id",
-        "description": "",
-        "operationId": "getAccountAuditLogs",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
-            "format": "uuid"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/AuditLog"
-              }
-            }
-          },
-          "404": {
-            "description": "Account not found"
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      }
-    },
     "/1.0/kb/admin/queues": {
       "get": {
         "tags": [
@@ -3336,6 +3336,74 @@
         ]
       }
     },
+    "/1.0/kb/admin/invoices": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Trigger an invoice generation for all parked accounts",
+        "description": "",
+        "operationId": "triggerInvoiceGenerationForParkedAccounts",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int64"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 100,
+            "format": "int64"
+          },
+          {
+            "name": "X-Killbill-CreatedBy",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Reason",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Comment",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      }
+    },
     "/1.0/kb/admin/payments/{paymentId}/transactions/{paymentTransactionId}": {
       "put": {
         "tags": [
@@ -3400,74 +3468,6 @@
           },
           "400": {
             "description": "Invalid account data supplied"
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      }
-    },
-    "/1.0/kb/admin/invoices": {
-      "post": {
-        "tags": [
-          "Admin"
-        ],
-        "summary": "Trigger an invoice generation for all parked accounts",
-        "description": "",
-        "operationId": "triggerInvoiceGenerationForParkedAccounts",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "offset",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "default": 0,
-            "format": "int64"
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "default": 100,
-            "format": "int64"
-          },
-          {
-            "name": "X-Killbill-CreatedBy",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Reason",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Comment",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation"
           }
         },
         "security": [
@@ -3638,171 +3638,6 @@
         "responses": {
           "204": {
             "description": "Successful operation"
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      }
-    },
-    "/1.0/kb/bundles/{bundleId}": {
-      "get": {
-        "tags": [
-          "Bundle"
-        ],
-        "summary": "Retrieve a bundle by id",
-        "description": "",
-        "operationId": "getBundle",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "bundleId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
-            "format": "uuid"
-          },
-          {
-            "name": "audit",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "default": "NONE",
-            "enum": [
-              "FULL",
-              "MINIMAL",
-              "NONE"
-            ]
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/Bundle"
-            }
-          },
-          "400": {
-            "description": "Invalid bundle id supplied"
-          },
-          "404": {
-            "description": "Bundle not found"
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      },
-      "post": {
-        "tags": [
-          "Bundle"
-        ],
-        "summary": "Transfer a bundle to another account",
-        "description": "",
-        "operationId": "transferBundle",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "bundleId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
-            "format": "uuid"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Bundle"
-            }
-          },
-          {
-            "name": "requestedDate",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "date"
-          },
-          {
-            "name": "billingPolicy",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "default": "END_OF_TERM",
-            "enum": [
-              "START_OF_TERM",
-              "END_OF_TERM",
-              "IMMEDIATE",
-              "ILLEGAL"
-            ]
-          },
-          {
-            "name": "pluginProperty",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
-          },
-          {
-            "name": "X-Killbill-CreatedBy",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Reason",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Comment",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Bundle transferred successfully",
-            "schema": {
-              "$ref": "#/definitions/Bundle"
-            }
-          },
-          "400": {
-            "description": "Invalid bundle id, requested date or policy supplied"
-          },
-          "404": {
-            "description": "Bundle not found"
           }
         },
         "security": [
@@ -4831,6 +4666,171 @@
         ]
       }
     },
+    "/1.0/kb/bundles/{bundleId}": {
+      "get": {
+        "tags": [
+          "Bundle"
+        ],
+        "summary": "Retrieve a bundle by id",
+        "description": "",
+        "operationId": "getBundle",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "bundleId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
+            "format": "uuid"
+          },
+          {
+            "name": "audit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "NONE",
+            "enum": [
+              "FULL",
+              "MINIMAL",
+              "NONE"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Bundle"
+            }
+          },
+          "400": {
+            "description": "Invalid bundle id supplied"
+          },
+          "404": {
+            "description": "Bundle not found"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Bundle"
+        ],
+        "summary": "Transfer a bundle to another account",
+        "description": "",
+        "operationId": "transferBundle",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "bundleId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
+            "format": "uuid"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Bundle"
+            }
+          },
+          {
+            "name": "requestedDate",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "billingPolicy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "END_OF_TERM",
+            "enum": [
+              "START_OF_TERM",
+              "END_OF_TERM",
+              "IMMEDIATE",
+              "ILLEGAL"
+            ]
+          },
+          {
+            "name": "pluginProperty",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "X-Killbill-CreatedBy",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Reason",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Comment",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Bundle transferred successfully",
+            "schema": {
+              "$ref": "#/definitions/Bundle"
+            }
+          },
+          "400": {
+            "description": "Invalid bundle id, requested date or policy supplied"
+          },
+          "404": {
+            "description": "Bundle not found"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      }
+    },
     "/1.0/kb/bundles/{bundleId}/renameKey": {
       "put": {
         "tags": [
@@ -4887,6 +4887,164 @@
           },
           "404": {
             "description": "Bundle not found"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      }
+    },
+    "/1.0/kb/catalog/simplePlan": {
+      "post": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Add a simple plan entry in the current version of the catalog",
+        "description": "",
+        "operationId": "addSimplePlan",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SimplePlan"
+            }
+          },
+          {
+            "name": "X-Killbill-CreatedBy",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Reason",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Comment",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created new plan successfully",
+            "schema": {
+              "type": "string"
+            }
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      }
+    },
+    "/1.0/kb/catalog": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Retrieve the catalog as JSON",
+        "description": "",
+        "operationId": "getCatalogJson",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "requestedDate",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Catalog"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Delete all versions for a per tenant catalog",
+        "description": "",
+        "operationId": "deleteCatalog",
+        "parameters": [
+          {
+            "name": "X-Killbill-CreatedBy",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Reason",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Comment",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful operation"
           }
         },
         "security": [
@@ -4993,101 +5151,6 @@
             "schema": {
               "type": "string"
             }
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      }
-    },
-    "/1.0/kb/catalog": {
-      "get": {
-        "tags": [
-          "Catalog"
-        ],
-        "summary": "Retrieve the catalog as JSON",
-        "description": "",
-        "operationId": "getCatalogJson",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "requestedDate",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "date-time"
-          },
-          {
-            "name": "accountId",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "uuid"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Catalog"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      },
-      "delete": {
-        "tags": [
-          "Catalog"
-        ],
-        "summary": "Delete all versions for a per tenant catalog",
-        "description": "",
-        "operationId": "deleteCatalog",
-        "parameters": [
-          {
-            "name": "X-Killbill-CreatedBy",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Reason",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Comment",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successful operation"
           }
         },
         "security": [
@@ -5424,69 +5487,6 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/PriceList"
-            }
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      }
-    },
-    "/1.0/kb/catalog/simplePlan": {
-      "post": {
-        "tags": [
-          "Catalog"
-        ],
-        "summary": "Add a simple plan entry in the current version of the catalog",
-        "description": "",
-        "operationId": "addSimplePlan",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/SimplePlan"
-            }
-          },
-          {
-            "name": "X-Killbill-CreatedBy",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Reason",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Comment",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created new plan successfully",
-            "schema": {
-              "type": "string"
             }
           }
         },
@@ -10443,270 +10443,6 @@
         ]
       }
     },
-    "/1.0/kb/paymentMethods/search/{searchKey}": {
-      "get": {
-        "tags": [
-          "PaymentMethod"
-        ],
-        "summary": "Search payment methods",
-        "description": "",
-        "operationId": "searchPaymentMethods",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "searchKey",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": ".*"
-          },
-          {
-            "name": "offset",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "default": 0,
-            "format": "int64"
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "default": 100,
-            "format": "int64"
-          },
-          {
-            "name": "pluginName",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "withPluginInfo",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "default": false
-          },
-          {
-            "name": "pluginProperty",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
-          },
-          {
-            "name": "audit",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "default": "NONE",
-            "enum": [
-              "FULL",
-              "MINIMAL",
-              "NONE"
-            ]
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/PaymentMethod"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      }
-    },
-    "/1.0/kb/paymentMethods/{paymentMethodId}": {
-      "get": {
-        "tags": [
-          "PaymentMethod"
-        ],
-        "summary": "Retrieve a payment method by id",
-        "description": "",
-        "operationId": "getPaymentMethod",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "paymentMethodId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
-            "format": "uuid"
-          },
-          {
-            "name": "includedDeleted",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "default": false
-          },
-          {
-            "name": "withPluginInfo",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "default": false
-          },
-          {
-            "name": "pluginProperty",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
-          },
-          {
-            "name": "audit",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "default": "NONE",
-            "enum": [
-              "FULL",
-              "MINIMAL",
-              "NONE"
-            ]
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/PaymentMethod"
-            }
-          },
-          "400": {
-            "description": "Invalid paymentMethodId supplied"
-          },
-          "404": {
-            "description": "Account or payment method not found"
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      },
-      "delete": {
-        "tags": [
-          "PaymentMethod"
-        ],
-        "summary": "Delete a payment method",
-        "description": "",
-        "operationId": "deletePaymentMethod",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "paymentMethodId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
-            "format": "uuid"
-          },
-          {
-            "name": "deleteDefaultPmWithAutoPayOff",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "default": false
-          },
-          {
-            "name": "forceDefaultPmDeletion",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "default": false
-          },
-          {
-            "name": "pluginProperty",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
-          },
-          {
-            "name": "X-Killbill-CreatedBy",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Reason",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "X-Killbill-Comment",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successful operation"
-          },
-          "400": {
-            "description": "Invalid paymentMethodId supplied"
-          },
-          "404": {
-            "description": "Account or payment method not found"
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
-          }
-        ]
-      }
-    },
     "/1.0/kb/paymentMethods/{paymentMethodId}/customFields": {
       "get": {
         "tags": [
@@ -10989,14 +10725,14 @@
         ]
       }
     },
-    "/1.0/kb/paymentMethods/{paymentMethodId}/auditLogsWithHistory": {
+    "/1.0/kb/paymentMethods/{paymentMethodId}": {
       "get": {
         "tags": [
           "PaymentMethod"
         ],
-        "summary": "Retrieve payment method audit logs with history by id",
+        "summary": "Retrieve a payment method by id",
         "description": "",
-        "operationId": "getPaymentMethodAuditLogsWithHistory",
+        "operationId": "getPaymentMethod",
         "produces": [
           "application/json"
         ],
@@ -11008,20 +10744,141 @@
             "type": "string",
             "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
             "format": "uuid"
+          },
+          {
+            "name": "includedDeleted",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "withPluginInfo",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "pluginProperty",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "audit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "NONE",
+            "enum": [
+              "FULL",
+              "MINIMAL",
+              "NONE"
+            ]
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/AuditLog"
-              }
+              "$ref": "#/definitions/PaymentMethod"
             }
           },
+          "400": {
+            "description": "Invalid paymentMethodId supplied"
+          },
           "404": {
-            "description": "Account not found"
+            "description": "Account or payment method not found"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "PaymentMethod"
+        ],
+        "summary": "Delete a payment method",
+        "description": "",
+        "operationId": "deletePaymentMethod",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "paymentMethodId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
+            "format": "uuid"
+          },
+          {
+            "name": "deleteDefaultPmWithAutoPayOff",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "forceDefaultPmDeletion",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "pluginProperty",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "X-Killbill-CreatedBy",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Reason",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-Killbill-Comment",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful operation"
+          },
+          "400": {
+            "description": "Invalid paymentMethodId supplied"
+          },
+          "404": {
+            "description": "Account or payment method not found"
           }
         },
         "security": [
@@ -11189,6 +11046,149 @@
                 "$ref": "#/definitions/PaymentMethod"
               }
             }
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      }
+    },
+    "/1.0/kb/paymentMethods/search/{searchKey}": {
+      "get": {
+        "tags": [
+          "PaymentMethod"
+        ],
+        "summary": "Search payment methods",
+        "description": "",
+        "operationId": "searchPaymentMethods",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "searchKey",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": ".*"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int64"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 100,
+            "format": "int64"
+          },
+          {
+            "name": "pluginName",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "withPluginInfo",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "pluginProperty",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "audit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "NONE",
+            "enum": [
+              "FULL",
+              "MINIMAL",
+              "NONE"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PaymentMethod"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      }
+    },
+    "/1.0/kb/paymentMethods/{paymentMethodId}/auditLogsWithHistory": {
+      "get": {
+        "tags": [
+          "PaymentMethod"
+        ],
+        "summary": "Retrieve payment method audit logs with history by id",
+        "description": "",
+        "operationId": "getPaymentMethodAuditLogsWithHistory",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "paymentMethodId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AuditLog"
+              }
+            }
+          },
+          "404": {
+            "description": "Account not found"
           }
         },
         "security": [
@@ -13668,63 +13668,6 @@
         ]
       }
     },
-    "/1.0/kb/security/permissions": {
-      "get": {
-        "tags": [
-          "Security"
-        ],
-        "summary": "List user permissions",
-        "description": "",
-        "operationId": "getCurrentUserPermissions",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          }
-        ]
-      }
-    },
-    "/1.0/kb/security/subject": {
-      "get": {
-        "tags": [
-          "Security"
-        ],
-        "summary": "Get user information",
-        "description": "",
-        "operationId": "getCurrentUserSubject",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/Subject"
-            }
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          }
-        ]
-      }
-    },
     "/1.0/kb/security/users": {
       "post": {
         "tags": [
@@ -13772,6 +13715,63 @@
             "description": "User role created successfully",
             "schema": {
               "$ref": "#/definitions/UserRoles"
+            }
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
+      }
+    },
+    "/1.0/kb/security/permissions": {
+      "get": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "List user permissions",
+        "description": "",
+        "operationId": "getCurrentUserPermissions",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
+      }
+    },
+    "/1.0/kb/security/subject": {
+      "get": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "Get user information",
+        "description": "",
+        "operationId": "getCurrentUserSubject",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Subject"
             }
           }
         },
@@ -16385,6 +16385,54 @@
         ]
       }
     },
+    "/1.0/kb/tenants/{tenantId}": {
+      "get": {
+        "tags": [
+          "Tenant"
+        ],
+        "summary": "Retrieve a tenant by id",
+        "description": "",
+        "operationId": "getTenant",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Tenant"
+            }
+          },
+          "400": {
+            "description": "Invalid tenantId supplied"
+          },
+          "404": {
+            "description": "Tenant not found"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          },
+          {
+            "Killbill Api Key": []
+          },
+          {
+            "Killbill Api Secret": []
+          }
+        ]
+      }
+    },
     "/1.0/kb/tenants": {
       "get": {
         "tags": [
@@ -16483,54 +16531,6 @@
         "security": [
           {
             "basicAuth": []
-          }
-        ]
-      }
-    },
-    "/1.0/kb/tenants/{tenantId}": {
-      "get": {
-        "tags": [
-          "Tenant"
-        ],
-        "summary": "Retrieve a tenant by id",
-        "description": "",
-        "operationId": "getTenant",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "tenantId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "\\w+-\\w+-\\w+-\\w+-\\w+",
-            "format": "uuid"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/Tenant"
-            }
-          },
-          "400": {
-            "description": "Invalid tenantId supplied"
-          },
-          "404": {
-            "description": "Tenant not found"
-          }
-        },
-        "security": [
-          {
-            "basicAuth": []
-          },
-          {
-            "Killbill Api Key": []
-          },
-          {
-            "Killbill Api Secret": []
           }
         ]
       }
@@ -18209,6 +18209,265 @@
     }
   },
   "definitions": {
+    "Account": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "firstNameLength": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "externalKey": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "billCycleDayLocal": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "currency": {
+          "type": "string",
+          "enum": [
+            "AED",
+            "AFN",
+            "ALL",
+            "AMD",
+            "ANG",
+            "AOA",
+            "ARS",
+            "AUD",
+            "AWG",
+            "AZN",
+            "BAM",
+            "BBD",
+            "BDT",
+            "BGN",
+            "BHD",
+            "BIF",
+            "BMD",
+            "BND",
+            "BOB",
+            "BRL",
+            "BSD",
+            "BTN",
+            "BWP",
+            "BYR",
+            "BZD",
+            "CAD",
+            "CDF",
+            "CHF",
+            "CLP",
+            "CNY",
+            "COP",
+            "CRC",
+            "CUC",
+            "CUP",
+            "CVE",
+            "CZK",
+            "DJF",
+            "DKK",
+            "DOP",
+            "DZD",
+            "EGP",
+            "ERN",
+            "ETB",
+            "EUR",
+            "FJD",
+            "FKP",
+            "GBP",
+            "GEL",
+            "GGP",
+            "GHS",
+            "GIP",
+            "GMD",
+            "GNF",
+            "GTQ",
+            "GYD",
+            "HKD",
+            "HNL",
+            "HRK",
+            "HTG",
+            "HUF",
+            "IDR",
+            "ILS",
+            "IMP",
+            "INR",
+            "IQD",
+            "IRR",
+            "ISK",
+            "JEP",
+            "JMD",
+            "JOD",
+            "JPY",
+            "KES",
+            "KGS",
+            "KHR",
+            "KMF",
+            "KPW",
+            "KRW",
+            "KWD",
+            "KYD",
+            "KZT",
+            "LAK",
+            "LBP",
+            "LKR",
+            "LRD",
+            "LSL",
+            "LTL",
+            "LVL",
+            "LYD",
+            "MAD",
+            "MDL",
+            "MGA",
+            "MKD",
+            "MMK",
+            "MNT",
+            "MOP",
+            "MRO",
+            "MUR",
+            "MVR",
+            "MWK",
+            "MXN",
+            "MYR",
+            "MZN",
+            "NAD",
+            "NGN",
+            "NIO",
+            "NOK",
+            "NPR",
+            "NZD",
+            "OMR",
+            "PAB",
+            "PEN",
+            "PGK",
+            "PHP",
+            "PKR",
+            "PLN",
+            "PYG",
+            "QAR",
+            "RON",
+            "RSD",
+            "RUB",
+            "RWF",
+            "SAR",
+            "SBD",
+            "SCR",
+            "SDG",
+            "SEK",
+            "SGD",
+            "SHP",
+            "SLL",
+            "SOS",
+            "SPL",
+            "SRD",
+            "STD",
+            "SVC",
+            "SYP",
+            "SZL",
+            "THB",
+            "TJS",
+            "TMT",
+            "TND",
+            "TOP",
+            "TRY",
+            "TTD",
+            "TVD",
+            "TWD",
+            "TZS",
+            "UAH",
+            "UGX",
+            "USD",
+            "UYU",
+            "UZS",
+            "VEF",
+            "VND",
+            "VUV",
+            "WST",
+            "XAF",
+            "XCD",
+            "XDR",
+            "XOF",
+            "XPF",
+            "YER",
+            "ZAR",
+            "ZMW",
+            "ZWD",
+            "BTC"
+          ]
+        },
+        "parentAccountId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "isPaymentDelegatedToParent": {
+          "type": "boolean"
+        },
+        "paymentMethodId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "referenceTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "timeZone": {
+          "type": "string"
+        },
+        "address1": {
+          "type": "string"
+        },
+        "address2": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "company": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "locale": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "isMigrated": {
+          "type": "boolean"
+        },
+        "accountBalance": {
+          "type": "number"
+        },
+        "accountCBA": {
+          "type": "number"
+        },
+        "auditLogs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AuditLog"
+          }
+        }
+      }
+    },
     "AuditLog": {
       "type": "object",
       "properties": {
@@ -18267,17 +18526,414 @@
     "Entity": {
       "type": "object",
       "properties": {
-        "updatedDate": {
+        "createdDate": {
           "type": "string",
           "format": "date-time"
         },
-        "createdDate": {
+        "updatedDate": {
           "type": "string",
           "format": "date-time"
         },
         "id": {
           "type": "string",
           "format": "uuid"
+        }
+      }
+    },
+    "BlockPrice": {
+      "type": "object",
+      "properties": {
+        "unitName": {
+          "type": "string"
+        },
+        "size": {
+          "type": "number",
+          "format": "double"
+        },
+        "price": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "Bundle": {
+      "type": "object",
+      "required": [
+        "accountId"
+      ],
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "bundleId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "externalKey": {
+          "type": "string"
+        },
+        "subscriptions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Subscription"
+          }
+        },
+        "timeline": {
+          "$ref": "#/definitions/BundleTimeline"
+        },
+        "auditLogs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AuditLog"
+          }
+        }
+      }
+    },
+    "BundleTimeline": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "bundleId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "externalKey": {
+          "type": "string"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EventSubscription"
+          }
+        },
+        "auditLogs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AuditLog"
+          }
+        }
+      }
+    },
+    "EventSubscription": {
+      "type": "object",
+      "properties": {
+        "eventId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "billingPeriod": {
+          "type": "string",
+          "enum": [
+            "DAILY",
+            "WEEKLY",
+            "BIWEEKLY",
+            "THIRTY_DAYS",
+            "SIXTY_DAYS",
+            "NINETY_DAYS",
+            "MONTHLY",
+            "BIMESTRIAL",
+            "QUARTERLY",
+            "TRIANNUAL",
+            "BIANNUAL",
+            "ANNUAL",
+            "BIENNIAL",
+            "NO_BILLING_PERIOD"
+          ]
+        },
+        "effectiveDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "plan": {
+          "type": "string"
+        },
+        "product": {
+          "type": "string"
+        },
+        "priceList": {
+          "type": "string"
+        },
+        "eventType": {
+          "type": "string",
+          "enum": [
+            "START_ENTITLEMENT",
+            "START_BILLING",
+            "PAUSE_ENTITLEMENT",
+            "PAUSE_BILLING",
+            "RESUME_ENTITLEMENT",
+            "RESUME_BILLING",
+            "PHASE",
+            "CHANGE",
+            "STOP_ENTITLEMENT",
+            "STOP_BILLING",
+            "SERVICE_STATE_CHANGE"
+          ]
+        },
+        "isBlockedBilling": {
+          "type": "boolean"
+        },
+        "isBlockedEntitlement": {
+          "type": "boolean"
+        },
+        "serviceName": {
+          "type": "string"
+        },
+        "serviceStateName": {
+          "type": "string"
+        },
+        "phase": {
+          "type": "string"
+        },
+        "auditLogs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AuditLog"
+          }
+        }
+      }
+    },
+    "PhasePrice": {
+      "type": "object",
+      "properties": {
+        "planName": {
+          "type": "string"
+        },
+        "phaseName": {
+          "type": "string"
+        },
+        "phaseType": {
+          "type": "string"
+        },
+        "fixedPrice": {
+          "type": "number"
+        },
+        "recurringPrice": {
+          "type": "number"
+        },
+        "usagePrices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UsagePrice"
+          }
+        }
+      }
+    },
+    "Subscription": {
+      "type": "object",
+      "required": [
+        "billingPeriod",
+        "planName",
+        "priceList",
+        "productName"
+      ],
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "bundleId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "bundleExternalKey": {
+          "type": "string"
+        },
+        "subscriptionId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "externalKey": {
+          "type": "string"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "productName": {
+          "type": "string"
+        },
+        "productCategory": {
+          "type": "string",
+          "enum": [
+            "BASE",
+            "ADD_ON",
+            "STANDALONE"
+          ]
+        },
+        "billingPeriod": {
+          "type": "string",
+          "enum": [
+            "DAILY",
+            "WEEKLY",
+            "BIWEEKLY",
+            "THIRTY_DAYS",
+            "SIXTY_DAYS",
+            "NINETY_DAYS",
+            "MONTHLY",
+            "BIMESTRIAL",
+            "QUARTERLY",
+            "TRIANNUAL",
+            "BIANNUAL",
+            "ANNUAL",
+            "BIENNIAL",
+            "NO_BILLING_PERIOD"
+          ]
+        },
+        "phaseType": {
+          "type": "string",
+          "enum": [
+            "TRIAL",
+            "DISCOUNT",
+            "FIXEDTERM",
+            "EVERGREEN"
+          ]
+        },
+        "priceList": {
+          "type": "string"
+        },
+        "planName": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "PENDING",
+            "ACTIVE",
+            "BLOCKED",
+            "CANCELLED",
+            "EXPIRED"
+          ]
+        },
+        "sourceType": {
+          "type": "string",
+          "enum": [
+            "NATIVE",
+            "MIGRATED",
+            "TRANSFERRED"
+          ]
+        },
+        "cancelledDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "chargedThroughDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "billingStartDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "billingEndDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "billCycleDayLocal": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EventSubscription"
+          }
+        },
+        "priceOverrides": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PhasePrice"
+          }
+        },
+        "prices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PhasePrice"
+          }
+        },
+        "auditLogs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AuditLog"
+          }
+        }
+      }
+    },
+    "TierPrice": {
+      "type": "object",
+      "properties": {
+        "blockPrices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BlockPrice"
+          }
+        }
+      }
+    },
+    "UsagePrice": {
+      "type": "object",
+      "properties": {
+        "usageName": {
+          "type": "string"
+        },
+        "usageType": {
+          "type": "string",
+          "enum": [
+            "CAPACITY",
+            "CONSUMABLE"
+          ]
+        },
+        "billingMode": {
+          "type": "string",
+          "enum": [
+            "IN_ADVANCE",
+            "IN_ARREAR"
+          ]
+        },
+        "tierBlockPolicy": {
+          "type": "string",
+          "enum": [
+            "ALL_TIERS",
+            "TOP_TIER"
+          ]
+        },
+        "tierPrices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TierPrice"
+          }
+        }
+      }
+    },
+    "AccountTimeline": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "$ref": "#/definitions/Account"
+        },
+        "bundles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Bundle"
+          }
+        },
+        "invoices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Invoice"
+          }
+        },
+        "payments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InvoicePayment"
+          }
         }
       }
     },
@@ -19715,6 +20371,151 @@
         }
       }
     },
+    "Tag": {
+      "type": "object",
+      "properties": {
+        "tagId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "objectType": {
+          "type": "string",
+          "enum": [
+            "ACCOUNT",
+            "ACCOUNT_EMAIL",
+            "BLOCKING_STATES",
+            "BUNDLE",
+            "CUSTOM_FIELD",
+            "INVOICE",
+            "PAYMENT",
+            "TRANSACTION",
+            "INVOICE_ITEM",
+            "INVOICE_PAYMENT",
+            "SUBSCRIPTION",
+            "SUBSCRIPTION_EVENT",
+            "SERVICE_BROADCAST",
+            "PAYMENT_ATTEMPT",
+            "PAYMENT_METHOD",
+            "TAG",
+            "TAG_DEFINITION",
+            "TENANT",
+            "TENANT_KVS"
+          ]
+        },
+        "objectId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "tagDefinitionId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "tagDefinitionName": {
+          "type": "string"
+        },
+        "auditLogs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AuditLog"
+          }
+        }
+      }
+    },
+    "CustomField": {
+      "type": "object",
+      "required": [
+        "name",
+        "value"
+      ],
+      "properties": {
+        "customFieldId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "objectId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "objectType": {
+          "type": "string",
+          "enum": [
+            "ACCOUNT",
+            "ACCOUNT_EMAIL",
+            "BLOCKING_STATES",
+            "BUNDLE",
+            "CUSTOM_FIELD",
+            "INVOICE",
+            "PAYMENT",
+            "TRANSACTION",
+            "INVOICE_ITEM",
+            "INVOICE_PAYMENT",
+            "SUBSCRIPTION",
+            "SUBSCRIPTION_EVENT",
+            "SERVICE_BROADCAST",
+            "PAYMENT_ATTEMPT",
+            "PAYMENT_METHOD",
+            "TAG",
+            "TAG_DEFINITION",
+            "TENANT",
+            "TENANT_KVS"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "auditLogs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AuditLog"
+          }
+        }
+      }
+    },
+    "BlockingState": {
+      "type": "object",
+      "properties": {
+        "blockedId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "stateName": {
+          "type": "string"
+        },
+        "service": {
+          "type": "string"
+        },
+        "isBlockChange": {
+          "type": "boolean"
+        },
+        "isBlockEntitlement": {
+          "type": "boolean"
+        },
+        "isBlockBilling": {
+          "type": "boolean"
+        },
+        "effectiveDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "SUBSCRIPTION",
+            "SUBSCRIPTION_BUNDLE",
+            "ACCOUNT"
+          ]
+        },
+        "auditLogs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AuditLog"
+          }
+        }
+      }
+    },
     "PaymentMethod": {
       "type": "object",
       "properties": {
@@ -20013,151 +20814,6 @@
         }
       }
     },
-    "BlockingState": {
-      "type": "object",
-      "properties": {
-        "blockedId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "stateName": {
-          "type": "string"
-        },
-        "service": {
-          "type": "string"
-        },
-        "isBlockChange": {
-          "type": "boolean"
-        },
-        "isBlockEntitlement": {
-          "type": "boolean"
-        },
-        "isBlockBilling": {
-          "type": "boolean"
-        },
-        "effectiveDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "type": {
-          "type": "string",
-          "enum": [
-            "SUBSCRIPTION",
-            "SUBSCRIPTION_BUNDLE",
-            "ACCOUNT"
-          ]
-        },
-        "auditLogs": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/AuditLog"
-          }
-        }
-      }
-    },
-    "CustomField": {
-      "type": "object",
-      "required": [
-        "name",
-        "value"
-      ],
-      "properties": {
-        "customFieldId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "objectId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "objectType": {
-          "type": "string",
-          "enum": [
-            "ACCOUNT",
-            "ACCOUNT_EMAIL",
-            "BLOCKING_STATES",
-            "BUNDLE",
-            "CUSTOM_FIELD",
-            "INVOICE",
-            "PAYMENT",
-            "TRANSACTION",
-            "INVOICE_ITEM",
-            "INVOICE_PAYMENT",
-            "SUBSCRIPTION",
-            "SUBSCRIPTION_EVENT",
-            "SERVICE_BROADCAST",
-            "PAYMENT_ATTEMPT",
-            "PAYMENT_METHOD",
-            "TAG",
-            "TAG_DEFINITION",
-            "TENANT",
-            "TENANT_KVS"
-          ]
-        },
-        "name": {
-          "type": "string"
-        },
-        "value": {
-          "type": "string"
-        },
-        "auditLogs": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/AuditLog"
-          }
-        }
-      }
-    },
-    "Tag": {
-      "type": "object",
-      "properties": {
-        "tagId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "objectType": {
-          "type": "string",
-          "enum": [
-            "ACCOUNT",
-            "ACCOUNT_EMAIL",
-            "BLOCKING_STATES",
-            "BUNDLE",
-            "CUSTOM_FIELD",
-            "INVOICE",
-            "PAYMENT",
-            "TRANSACTION",
-            "INVOICE_ITEM",
-            "INVOICE_PAYMENT",
-            "SUBSCRIPTION",
-            "SUBSCRIPTION_EVENT",
-            "SERVICE_BROADCAST",
-            "PAYMENT_ATTEMPT",
-            "PAYMENT_METHOD",
-            "TAG",
-            "TAG_DEFINITION",
-            "TENANT",
-            "TENANT_KVS"
-          ]
-        },
-        "objectId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "tagDefinitionId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "tagDefinitionName": {
-          "type": "string"
-        },
-        "auditLogs": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/AuditLog"
-          }
-        }
-      }
-    },
     "AccountEmail": {
       "type": "object",
       "required": [
@@ -20179,29 +20835,36 @@
         }
       }
     },
-    "Account": {
+    "AdminPayment": {
       "type": "object",
       "properties": {
-        "accountId": {
+        "lastSuccessPaymentState": {
+          "type": "string"
+        },
+        "currentPaymentStateName": {
+          "type": "string"
+        },
+        "transactionStatus": {
+          "type": "string"
+        }
+      }
+    },
+    "SimplePlan": {
+      "type": "object",
+      "properties": {
+        "planId": {
+          "type": "string"
+        },
+        "productName": {
+          "type": "string"
+        },
+        "productCategory": {
           "type": "string",
-          "format": "uuid"
-        },
-        "name": {
-          "type": "string"
-        },
-        "firstNameLength": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "externalKey": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "billCycleDayLocal": {
-          "type": "integer",
-          "format": "int32"
+          "enum": [
+            "BASE",
+            "ADD_ON",
+            "STANDALONE"
+          ]
         },
         "currency": {
           "type": "string",
@@ -20373,158 +21036,8 @@
             "BTC"
           ]
         },
-        "parentAccountId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "isPaymentDelegatedToParent": {
-          "type": "boolean"
-        },
-        "paymentMethodId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "referenceTime": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "timeZone": {
-          "type": "string"
-        },
-        "address1": {
-          "type": "string"
-        },
-        "address2": {
-          "type": "string"
-        },
-        "postalCode": {
-          "type": "string"
-        },
-        "company": {
-          "type": "string"
-        },
-        "city": {
-          "type": "string"
-        },
-        "state": {
-          "type": "string"
-        },
-        "country": {
-          "type": "string"
-        },
-        "locale": {
-          "type": "string"
-        },
-        "phone": {
-          "type": "string"
-        },
-        "notes": {
-          "type": "string"
-        },
-        "isMigrated": {
-          "type": "boolean"
-        },
-        "accountBalance": {
+        "amount": {
           "type": "number"
-        },
-        "accountCBA": {
-          "type": "number"
-        },
-        "auditLogs": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/AuditLog"
-          }
-        }
-      }
-    },
-    "BlockPrice": {
-      "type": "object",
-      "properties": {
-        "unitName": {
-          "type": "string"
-        },
-        "size": {
-          "type": "number",
-          "format": "double"
-        },
-        "price": {
-          "type": "number"
-        },
-        "max": {
-          "type": "number",
-          "format": "double"
-        }
-      }
-    },
-    "Bundle": {
-      "type": "object",
-      "required": [
-        "accountId"
-      ],
-      "properties": {
-        "accountId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "bundleId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "externalKey": {
-          "type": "string"
-        },
-        "subscriptions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Subscription"
-          }
-        },
-        "timeline": {
-          "$ref": "#/definitions/BundleTimeline"
-        },
-        "auditLogs": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/AuditLog"
-          }
-        }
-      }
-    },
-    "BundleTimeline": {
-      "type": "object",
-      "properties": {
-        "accountId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "bundleId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "externalKey": {
-          "type": "string"
-        },
-        "events": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/EventSubscription"
-          }
-        },
-        "auditLogs": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/AuditLog"
-          }
-        }
-      }
-    },
-    "EventSubscription": {
-      "type": "object",
-      "properties": {
-        "eventId": {
-          "type": "string",
-          "format": "uuid"
         },
         "billingPeriod": {
           "type": "string",
@@ -20545,307 +21058,25 @@
             "NO_BILLING_PERIOD"
           ]
         },
-        "effectiveDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "plan": {
-          "type": "string"
-        },
-        "product": {
-          "type": "string"
-        },
-        "priceList": {
-          "type": "string"
-        },
-        "eventType": {
-          "type": "string",
-          "enum": [
-            "START_ENTITLEMENT",
-            "START_BILLING",
-            "PAUSE_ENTITLEMENT",
-            "PAUSE_BILLING",
-            "RESUME_ENTITLEMENT",
-            "RESUME_BILLING",
-            "PHASE",
-            "CHANGE",
-            "STOP_ENTITLEMENT",
-            "STOP_BILLING",
-            "SERVICE_STATE_CHANGE"
-          ]
-        },
-        "isBlockedBilling": {
-          "type": "boolean"
-        },
-        "isBlockedEntitlement": {
-          "type": "boolean"
-        },
-        "serviceName": {
-          "type": "string"
-        },
-        "serviceStateName": {
-          "type": "string"
-        },
-        "phase": {
-          "type": "string"
-        },
-        "auditLogs": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/AuditLog"
-          }
-        }
-      }
-    },
-    "PhasePrice": {
-      "type": "object",
-      "properties": {
-        "planName": {
-          "type": "string"
-        },
-        "phaseName": {
-          "type": "string"
-        },
-        "phaseType": {
-          "type": "string"
-        },
-        "fixedPrice": {
-          "type": "number"
-        },
-        "recurringPrice": {
-          "type": "number"
-        },
-        "usagePrices": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/UsagePrice"
-          }
-        }
-      }
-    },
-    "Subscription": {
-      "type": "object",
-      "required": [
-        "billingPeriod",
-        "planName",
-        "priceList",
-        "productName"
-      ],
-      "properties": {
-        "accountId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "bundleId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "bundleExternalKey": {
-          "type": "string"
-        },
-        "subscriptionId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "externalKey": {
-          "type": "string"
-        },
-        "startDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "productName": {
-          "type": "string"
-        },
-        "productCategory": {
-          "type": "string",
-          "enum": [
-            "BASE",
-            "ADD_ON",
-            "STANDALONE"
-          ]
-        },
-        "billingPeriod": {
-          "type": "string",
-          "enum": [
-            "DAILY",
-            "WEEKLY",
-            "BIWEEKLY",
-            "THIRTY_DAYS",
-            "SIXTY_DAYS",
-            "NINETY_DAYS",
-            "MONTHLY",
-            "BIMESTRIAL",
-            "QUARTERLY",
-            "TRIANNUAL",
-            "BIANNUAL",
-            "ANNUAL",
-            "BIENNIAL",
-            "NO_BILLING_PERIOD"
-          ]
-        },
-        "phaseType": {
-          "type": "string",
-          "enum": [
-            "TRIAL",
-            "DISCOUNT",
-            "FIXEDTERM",
-            "EVERGREEN"
-          ]
-        },
-        "priceList": {
-          "type": "string"
-        },
-        "planName": {
-          "type": "string"
-        },
-        "state": {
-          "type": "string",
-          "enum": [
-            "PENDING",
-            "ACTIVE",
-            "BLOCKED",
-            "CANCELLED",
-            "EXPIRED"
-          ]
-        },
-        "sourceType": {
-          "type": "string",
-          "enum": [
-            "NATIVE",
-            "MIGRATED",
-            "TRANSFERRED"
-          ]
-        },
-        "cancelledDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "chargedThroughDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "billingStartDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "billingEndDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "billCycleDayLocal": {
+        "trialLength": {
           "type": "integer",
           "format": "int32"
         },
-        "events": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/EventSubscription"
-          }
-        },
-        "priceOverrides": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/PhasePrice"
-          }
-        },
-        "prices": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/PhasePrice"
-          }
-        },
-        "auditLogs": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/AuditLog"
-          }
-        }
-      }
-    },
-    "TierPrice": {
-      "type": "object",
-      "properties": {
-        "blockPrices": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/BlockPrice"
-          }
-        }
-      }
-    },
-    "UsagePrice": {
-      "type": "object",
-      "properties": {
-        "usageName": {
-          "type": "string"
-        },
-        "usageType": {
+        "trialTimeUnit": {
           "type": "string",
           "enum": [
-            "CAPACITY",
-            "CONSUMABLE"
+            "DAYS",
+            "WEEKS",
+            "MONTHS",
+            "YEARS",
+            "UNLIMITED"
           ]
         },
-        "billingMode": {
-          "type": "string",
-          "enum": [
-            "IN_ADVANCE",
-            "IN_ARREAR"
-          ]
-        },
-        "tierBlockPolicy": {
-          "type": "string",
-          "enum": [
-            "ALL_TIERS",
-            "TOP_TIER"
-          ]
-        },
-        "tierPrices": {
+        "availableBaseProducts": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/TierPrice"
+            "type": "string"
           }
-        }
-      }
-    },
-    "AccountTimeline": {
-      "type": "object",
-      "properties": {
-        "account": {
-          "$ref": "#/definitions/Account"
-        },
-        "bundles": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Bundle"
-          }
-        },
-        "invoices": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Invoice"
-          }
-        },
-        "payments": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/InvoicePayment"
-          }
-        }
-      }
-    },
-    "AdminPayment": {
-      "type": "object",
-      "properties": {
-        "lastSuccessPaymentState": {
-          "type": "string"
-        },
-        "currentPaymentStateName": {
-          "type": "string"
-        },
-        "transactionStatus": {
-          "type": "string"
         }
       }
     },
@@ -21483,237 +21714,6 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/Price"
-          }
-        }
-      }
-    },
-    "SimplePlan": {
-      "type": "object",
-      "properties": {
-        "planId": {
-          "type": "string"
-        },
-        "productName": {
-          "type": "string"
-        },
-        "productCategory": {
-          "type": "string",
-          "enum": [
-            "BASE",
-            "ADD_ON",
-            "STANDALONE"
-          ]
-        },
-        "currency": {
-          "type": "string",
-          "enum": [
-            "AED",
-            "AFN",
-            "ALL",
-            "AMD",
-            "ANG",
-            "AOA",
-            "ARS",
-            "AUD",
-            "AWG",
-            "AZN",
-            "BAM",
-            "BBD",
-            "BDT",
-            "BGN",
-            "BHD",
-            "BIF",
-            "BMD",
-            "BND",
-            "BOB",
-            "BRL",
-            "BSD",
-            "BTN",
-            "BWP",
-            "BYR",
-            "BZD",
-            "CAD",
-            "CDF",
-            "CHF",
-            "CLP",
-            "CNY",
-            "COP",
-            "CRC",
-            "CUC",
-            "CUP",
-            "CVE",
-            "CZK",
-            "DJF",
-            "DKK",
-            "DOP",
-            "DZD",
-            "EGP",
-            "ERN",
-            "ETB",
-            "EUR",
-            "FJD",
-            "FKP",
-            "GBP",
-            "GEL",
-            "GGP",
-            "GHS",
-            "GIP",
-            "GMD",
-            "GNF",
-            "GTQ",
-            "GYD",
-            "HKD",
-            "HNL",
-            "HRK",
-            "HTG",
-            "HUF",
-            "IDR",
-            "ILS",
-            "IMP",
-            "INR",
-            "IQD",
-            "IRR",
-            "ISK",
-            "JEP",
-            "JMD",
-            "JOD",
-            "JPY",
-            "KES",
-            "KGS",
-            "KHR",
-            "KMF",
-            "KPW",
-            "KRW",
-            "KWD",
-            "KYD",
-            "KZT",
-            "LAK",
-            "LBP",
-            "LKR",
-            "LRD",
-            "LSL",
-            "LTL",
-            "LVL",
-            "LYD",
-            "MAD",
-            "MDL",
-            "MGA",
-            "MKD",
-            "MMK",
-            "MNT",
-            "MOP",
-            "MRO",
-            "MUR",
-            "MVR",
-            "MWK",
-            "MXN",
-            "MYR",
-            "MZN",
-            "NAD",
-            "NGN",
-            "NIO",
-            "NOK",
-            "NPR",
-            "NZD",
-            "OMR",
-            "PAB",
-            "PEN",
-            "PGK",
-            "PHP",
-            "PKR",
-            "PLN",
-            "PYG",
-            "QAR",
-            "RON",
-            "RSD",
-            "RUB",
-            "RWF",
-            "SAR",
-            "SBD",
-            "SCR",
-            "SDG",
-            "SEK",
-            "SGD",
-            "SHP",
-            "SLL",
-            "SOS",
-            "SPL",
-            "SRD",
-            "STD",
-            "SVC",
-            "SYP",
-            "SZL",
-            "THB",
-            "TJS",
-            "TMT",
-            "TND",
-            "TOP",
-            "TRY",
-            "TTD",
-            "TVD",
-            "TWD",
-            "TZS",
-            "UAH",
-            "UGX",
-            "USD",
-            "UYU",
-            "UZS",
-            "VEF",
-            "VND",
-            "VUV",
-            "WST",
-            "XAF",
-            "XCD",
-            "XDR",
-            "XOF",
-            "XPF",
-            "YER",
-            "ZAR",
-            "ZMW",
-            "ZWD",
-            "BTC"
-          ]
-        },
-        "amount": {
-          "type": "number"
-        },
-        "billingPeriod": {
-          "type": "string",
-          "enum": [
-            "DAILY",
-            "WEEKLY",
-            "BIWEEKLY",
-            "THIRTY_DAYS",
-            "SIXTY_DAYS",
-            "NINETY_DAYS",
-            "MONTHLY",
-            "BIMESTRIAL",
-            "QUARTERLY",
-            "TRIANNUAL",
-            "BIANNUAL",
-            "ANNUAL",
-            "BIENNIAL",
-            "NO_BILLING_PERIOD"
-          ]
-        },
-        "trialLength": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "trialTimeUnit": {
-          "type": "string",
-          "enum": [
-            "DAYS",
-            "WEEKS",
-            "MONTHS",
-            "YEARS",
-            "UNLIMITED"
-          ]
-        },
-        "availableBaseProducts": {
-          "type": "array",
-          "items": {
-            "type": "string"
           }
         }
       }
@@ -22527,6 +22527,28 @@
         }
       }
     },
+    "UserRoles": {
+      "type": "object",
+      "required": [
+        "password",
+        "roles",
+        "username"
+      ],
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "Session": {
       "type": "object",
       "properties": {
@@ -22564,28 +22586,6 @@
         },
         "session": {
           "$ref": "#/definitions/Session"
-        }
-      }
-    },
-    "UserRoles": {
-      "type": "object",
-      "required": [
-        "password",
-        "roles",
-        "username"
-      ],
-      "properties": {
-        "username": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        },
-        "roles": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
         }
       }
     },
