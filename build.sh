@@ -17,4 +17,8 @@ java -jar swagger-codegen-cli.jar generate \
   --output .
 
 # TODO
+echo ""
+echo ""
+echo '!!!!!!!!!!!!!!!! -------- !!!!!!!!!!!!!!!!'
 echo "The new generation will have overwritten the custom Invoice Item Types DISCOUNT and CREDIT, re-add them!"
+echo '!!!!!!!!!!!!!!!! -------- !!!!!!!!!!!!!!!!'
