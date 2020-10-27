@@ -292,8 +292,6 @@ const ITEM_TYPE_ITEM_ADJ = 'ITEM_ADJ';
 const ITEM_TYPE_USAGE = 'USAGE';
 const ITEM_TYPE_TAX = 'TAX';
 const ITEM_TYPE_PARENT_SUMMARY = 'PARENT_SUMMARY';
-const ITEM_TYPE_DISCOUNT = 'DISCOUNT';
-const ITEM_TYPE_CREDIT = 'CREDIT';
 const CURRENCY_AED = 'AED';
 const CURRENCY_AFN = 'AFN';
 const CURRENCY_ALL = 'ALL';
@@ -477,9 +475,7 @@ self::ITEM_TYPE_CREDIT_ADJ,
 self::ITEM_TYPE_ITEM_ADJ,
 self::ITEM_TYPE_USAGE,
 self::ITEM_TYPE_TAX,
-self::ITEM_TYPE_PARENT_SUMMARY,
-self::ITEM_TYPE_DISCOUNT,
-self::ITEM_TYPE_CREDIT,        ];
+self::ITEM_TYPE_PARENT_SUMMARY,        ];
     }
     /**
      * Gets allowable values of the enum
